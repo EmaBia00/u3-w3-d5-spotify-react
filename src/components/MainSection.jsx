@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row, Button } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentSong, toggleLike } from "../redux/actions/musicPlayerAction";
 import Sidebar from "./Sidebar";
 
 const MainSection = () => {
@@ -7,6 +9,9 @@ const MainSection = () => {
   const [rockSongs, setRockSongs] = useState([]);
   const [popSongs, setPopSongs] = useState([]);
   const [hipHopSongs, setHipHopSongs] = useState([]);
+
+  const dispatch = useDispatch();
+  const likedSongs = useSelector((state) => state.likedSongs);
 
   // chimata Fetch GET
   const fillMusicSection = async (artistName, setSongsFunction) => {
@@ -23,23 +28,26 @@ const MainSection = () => {
     }
   };
 
-  // API degli artisti componentDidMount()
+  // API degli artisti usando il componentDidMount() tramite Hooks
   useEffect(() => {
     fillMusicSection("queen", setRockSongs);
     fillMusicSection("katyperry", setPopSongs);
     fillMusicSection("eminem", setHipHopSongs);
   }, []);
 
-  // Funzione per rendere il contenuto dinamico di ogni canzone
   const albumCard = (singleSong) => {
+    const isLiked = likedSongs[singleSong.id] || false;
     return (
       <div className="col text-center" key={singleSong.id}>
-        <img className="img-fluid" src={singleSong.album.cover_medium} alt="track" />
+        <img className="img-fluid" src={singleSong.album.cover_medium} alt="track" onClick={() => dispatch(setCurrentSong(singleSong))} />
         <p>
           Track: {singleSong.title}
           <br />
           Artist: {singleSong.artist.name}
         </p>
+        <Button variant={isLiked ? "success" : "outline-success"} onClick={() => dispatch(toggleLike(singleSong.id))}>
+          {isLiked ? "Mi Piace" : "Aggiungi ai Mi Piace"}
+        </Button>
       </div>
     );
   };
