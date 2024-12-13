@@ -13,8 +13,9 @@ const MusicPlayer = () => {
       <Row className="h-100">
         <Col lg={8} className="offset-lg-2 mb-1">
           <Row className="h-100 align-items-top">
+            {/* Colonna delle info dell'Album e Artista da visualizzare */}
             <Col md={4} className="mt-0">
-              {currentSong ? (
+              {currentSong != null && (
                 <div className="d-flex text-light gap-2" style={{ fontSize: "12px" }}>
                   <img src={currentSong.album.cover_medium} alt="Album Cover" className="w-25 rounded" style={{ objectFit: "cover" }} />
                   <div>
@@ -25,10 +26,9 @@ const MusicPlayer = () => {
                     </p>
                   </div>
                 </div>
-              ) : (
-                <p></p>
               )}
             </Col>
+            {/* Colonna del Music Player */}
             <Col md={4} className="offset-lg-1 playerControls mt-2">
               <div className="d-flex">
                 <a href="#">

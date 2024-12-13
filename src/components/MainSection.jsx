@@ -12,8 +12,9 @@ const MainSection = () => {
 
   const dispatch = useDispatch();
   const likedSongs = useSelector((state) => state.likedSongs);
+  const searchResults = useSelector((state) => state.searchResults); //Recupero i risultati salvati precedentemente nello state
 
-  // chimata Fetch GET
+  // chiamata Fetch GET per cercare l'artista
   const fillMusicSection = async (artistName, setSongsFunction) => {
     try {
       let response = await fetch(`https://striveschool-api.herokuapp.com/api/deezer/search?q=${artistName}`);
@@ -35,10 +36,11 @@ const MainSection = () => {
     fillMusicSection("eminem", setHipHopSongs);
   }, []);
 
+  // Struttura della card da visualizzare in pagina
   const albumCard = (singleSong) => {
     const isLiked = likedSongs[singleSong.id] || false;
     return (
-      <div className="col text-center" key={singleSong.id}>
+      <div className="col text-center mb-2" key={singleSong.id}>
         <img className="img-fluid" src={singleSong.album.cover_medium} alt="track" onClick={() => dispatch(setCurrentSong(singleSong))} />
         <p>
           Track: {singleSong.title}
@@ -66,6 +68,20 @@ const MainSection = () => {
               <a href="#">DISCOVER</a>
             </Col>
           </Row>
+
+          {/* GRUPPO searchResult viene visualizzato solo se viene cercato un artista */}
+          {searchResults.length > 0 && (
+            <Row>
+              <Col xs={10}>
+                <div id="searchResults">
+                  <h2>Search Results</h2>
+                  <Row xs={1} sm={2} lg={3} xl={4} className="imgLinks py-3" id="searchSection">
+                    {searchResults.map(albumCard)}
+                  </Row>
+                </div>
+              </Col>
+            </Row>
+          )}
           <Row>
             <Col xs={10}>
               <div id="rock">
